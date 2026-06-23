@@ -92,18 +92,29 @@ export default function Home() {
 
   const handleExecute = async () => {
     if (!command.trim()) return;
-    setLogs((prev) => [...prev, { text: `C:\\USER\\HUMAN> ${command}`, type: "user" }]);
+    setLogs((prev) => [...prev, { text: `C:\\USER\\HUMAN&gt; ${command}`, type: "user" }]);
     const currentCmd = command;
     setCommand("");
     setIsProcessing(true);
 
-    setTimeout(() => {
-      setLogs((prev) => [
-        ...prev,
-        { text: "[SECURE_MOCK_FEEDBACK]: Cloud node payload validated. Standing by for Render integration...", type: "system" },
-      ]);
+    try {
+      const response = await fetch('/api/execute', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ command: currentCmd, token: authKey })
+      });
+      const data = await response.json();
+      
+      if (response.ok) {
+        setLogs((prev) => [...prev, { text: data.feedback, type: "system" }]);
+      } else {
+        setLogs((prev) => [...prev, { text: data.error, type: "warning" }]);
+      }
+    } catch (error) {
+      setLogs((prev) => [...prev, { text: "⚠️ CONNECTION FAILED: Server offline.", type: "warning" }]);
+    } finally {
       setIsProcessing(false);
-    }, 500);
+    }
   };
 
   return (
