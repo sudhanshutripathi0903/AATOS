@@ -92,7 +92,7 @@ export default function Home() {
 
   const handleExecute = async () => {
     if (!command.trim()) return;
-    setLogs((prev) => [...prev, { text: `HUMAN>>; ${command}`, type: "user" }]);
+    setLogs((prev) => [...prev, { text: `C:\\USER\\HUMAN>> ${command}`, type: "user" }]);
     const currentCmd = command;
     setCommand("");
     setIsProcessing(true);
