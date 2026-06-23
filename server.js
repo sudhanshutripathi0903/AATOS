@@ -1,10 +1,19 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import pg from 'pg';
+import cors from 'cors'; // <-- Yeh naya guard hai
 
 dotenv.config();
 
 const app = express();
+
+// CORS ko fully allow kar do taaki Vercel se request aa sake
+app.use(cors({
+  origin: '*', // Isse har jagah se secure access allow ho jayega
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type']
+}));
+
 app.use(express.json());
 
 const port = process.env.PORT || 5000;
@@ -13,7 +22,7 @@ const port = process.env.PORT || 5000;
 const { Pool } = pg;
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false } // Render PostgreSQL ke liye zaroori hai
+  ssl: { rejectUnauthorized: false }
 });
 
 // Test Endpoint: Check system online status
@@ -36,7 +45,6 @@ app.post('/api/execute', async (req, res) => {
   }
 
   try {
-    // Database mein entry insert karna (Taaki logs delete na ho)
     const queryText = 'INSERT INTO logs(command, executed_at) VALUES($1, NOW()) RETURNING *';
     await pool.query(queryText, [command]);
 
@@ -48,7 +56,6 @@ app.post('/api/execute', async (req, res) => {
   }
 });
 
-// Initialize Logs Table inside Database automatically
 const initDb = async () => {
   try {
     await pool.query(`
