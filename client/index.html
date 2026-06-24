@@ -90,17 +90,22 @@
             pointer-events: none;
         }
 
-        /* ✨ EXTREME GEMINI BLUR-SLIDE TRANSITION FOR HERO TEXT */
+        /* 💫 SLIDE-UP ANIMATION FOR HERO TEXT */
         #hero-view {
             transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), filter 0.6s ease, opacity 0.5s ease;
             will-change: transform, filter;
         }
         
-        /* Box par touch/focus karte hi ye class trigger hogi */
         .hero-shifted {
             transform: translateY(-32vh) scale(0.8);
             filter: blur(4px);
             opacity: 0.8;
+        }
+
+        /* 🌌 THE MAGIC FIX: CHAT TOP-DISSOLVE MASK */
+        #chat-box {
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,1) 14%, rgba(0,0,0,1) 100%);
+            mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,1) 14%, rgba(0,0,0,1) 100%);
         }
     </style>
 </head>
@@ -154,7 +159,7 @@
                 </p>
             </div>
 
-            <div id="chat-box" class="w-full overflow-y-auto space-y-4 h-[52vh] max-h-[52vh] mb-6 hidden z-10 pr-1 mt-16">
+            <div id="chat-box" class="w-full overflow-y-auto space-y-4 h-[52vh] max-h-[52vh] mb-12 hidden z-10 pr-1 mt-16 pb-12">
                 </div>
 
             <div class="w-full max-w-xl z-20 absolute bottom-[25%] transition-all duration-700" id="input-wrapper">
@@ -205,22 +210,19 @@
             if (e.key === 'Enter') verifyPin();
         });
 
-        // 🔥 CRITICAL CLICK/FOCUS EVENT TRANSITION (GEMINI STYLE)
+        // 🔥 CLICK/FOCUS EVENT TRANSITION
         function startChatTransition() {
             if (isChatStarted) return;
             isChatStarted = true;
 
-            // 1. Smoothly blur and slide up the title heading
             heroView.classList.add('hero-shifted');
-            subTitle.style.opacity = '0'; // Fade out subtitle smoothly
+            subTitle.style.opacity = '0'; 
 
-            // 2. Anchor input wrapper to the exact bottom layout track
-            inputWrapper.style.bottom = '0px';
+            // ✅ Lifted exactly 20px off the bottom floor
+            inputWrapper.style.bottom = '20px';
 
-            // 3. Open chat block area underneath right after transform
             setTimeout(() => {
                 chatBox.style.display = 'block';
-                // Trigger standard greetings from AATOS Core
                 appendMessage('ai', 'Greetings, Commander. I am AATOS, your orbital intelligence core. Systems are fully responsive and under your direct command.');
             }, 300);
         }
@@ -229,7 +231,6 @@
             const text = cmdInput.value.trim();
             if (!text) return;
 
-            // Fallback check if user hit enter without clicking input directly
             if (!isChatStarted) startChatTransition();
 
             appendMessage('user', text);
