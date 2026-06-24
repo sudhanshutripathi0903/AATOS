@@ -63,7 +63,7 @@ app.post('/api/execute', async (req, res) => {
         { role: 'system', content: systemInstruction },
         { role: 'user', content: command }
       ],
-      model: 'llama3-8b-8192', // Super fast and free model
+      model: 'llama-3.1-8b-instant', // Super fast and free model
     });
 
     const aiFeedback = chatCompletion.choices[0]?.message?.content || "[SECURE_NODE]: Empty output from core node.";
