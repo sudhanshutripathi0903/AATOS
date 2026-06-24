@@ -89,6 +89,14 @@
             opacity: 0;
             pointer-events: none;
         }
+
+        /* 🎪 GENIUNE DYNAMIC SLIDE-UP EFFECT */
+        #hero-section {
+            transition: all 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .shift-to-top {
+            transform: translateY(-28vh) scale(0.85);
+        }
     </style>
 </head>
 <body class="scanlines">
@@ -130,25 +138,16 @@
             <div class="orbital-ring w-[500px] h-[500px] border-purple-400/10" style="animation-duration: 40s; animation-direction: reverse;"></div>
         </div>
 
-        <div id="dynamic-hub" class="w-full flex-1 flex flex-col justify-center items-center my-auto">
+        <div id="hero-section" class="w-full flex-1 flex flex-col justify-center items-center z-10">
             
-            <div id="status-badge" class="mb-4 text-center transition-all duration-500">
-                <div class="font-mono text-xs text-cyan-400 tracking-[0.2em] bg-cyan-500/5 border border-cyan-500/10 px-4 py-2 rounded-full inline-block backdrop-blur-sm animate-pulse">
-                    SERVER IS ONLINE // AI IS ACTIVATED
-                </div>
-            </div>
-
-            <div id="hero-view" class="text-center flex flex-col items-center justify-center mb-6">
+            <div class="text-center flex flex-col items-center justify-center mb-6">
                 <h1 class="font-orbitron text-4xl md:text-5xl font-black text-white mb-3 tracking-tight">
                     AATOS <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400">INTELLIGENCE</span>
                 </h1>
-                <p class="text-gray-400 text-xs max-w-sm font-rajdhani tracking-wide uppercase">
+                <p id="sub-title" class="text-gray-400 text-xs max-w-sm font-rajdhani tracking-wide uppercase">
                     SYSTEM SECURITY ENCRYPTED // CORE TERMINAL v2.6 ACTIVE
                 </p>
             </div>
-
-            <div id="chat-box" class="w-full overflow-y-auto space-y-4 max-h-[64vh] mb-4 hidden pr-1">
-                </div>
 
             <div class="w-full max-w-xl">
                 <div class="glass-panel border border-cyan-500/20 rounded-2xl p-2.5 shadow-2xl">
@@ -168,35 +167,27 @@
 
         </div>
 
+        <div id="chat-box" class="w-full overflow-y-auto space-y-4 h-[50vh] max-h-[50vh] mb-4 hidden z-10 pr-1">
+            </div>
+
         <footer class="text-[10px] font-mono text-gray-600 mt-2 flex-shrink-0">
             AATOS AI MATRIX PROTOCOL v2.6
         </footer>
     </div>
 
-    <script>
+    <script {safe}>
         const lockScreen = document.getElementById('lock-screen');
         const pinInput = document.getElementById('pin-input');
-        const heroView = document.getElementById('hero-view');
+        const heroSection = document.getElementById('hero-section');
         const chatBox = document.getElementById('chat-box');
         const cmdInput = document.getElementById('cmd-input');
-        const statusBadge = document.getElementById('status-badge');
-        const dynamicHub = document.getElementById('dynamic-hub');
+        const subTitle = document.getElementById('sub-title');
 
         let isChatStarted = false;
 
         function verifyPin() {
             if (pinInput.value === "2005") {
                 lockScreen.classList.add('slide-out');
-                setTimeout(() => {
-                    if (!isChatStarted) {
-                        isChatStarted = true;
-                        heroView.style.display = 'none';
-                        statusBadge.style.display = 'none'; // Unnecessary after entry
-                        dynamicHub.classList.remove('justify-center'); // Shift to top-flow layout
-                        chatBox.style.display = 'block';
-                        appendMessage('ai', 'Greetings, Commander. I am AATOS, your orbital intelligence core. Systems are fully responsive and under your direct command.');
-                    }
-                }, 400);
             } else {
                 alert("❌ ACCESS DENIED: ENCRYPTION KEY MISMATCH");
                 pinInput.value = '';
@@ -211,12 +202,18 @@
             const text = cmdInput.value.trim();
             if (!text) return;
 
+            // 🌟 GEMINI SLIDE UP EFFECT INITIALIZATION
             if (!isChatStarted) {
                 isChatStarted = true;
-                heroView.style.display = 'none';
-                statusBadge.style.display = 'none';
-                dynamicHub.classList.remove('justify-center');
-                chatBox.style.display = 'block';
+                subTitle.style.display = 'none'; // Clear smaller subtitle for clean look
+                heroSection.classList.add('shift-to-top'); // Smoothly slides heading + input to top
+                
+                setTimeout(() => {
+                    chatBox.style.display = 'block'; // Fades chat room right underneath the shifted element
+                }, 400);
+                
+                // Greeting message
+                appendMessage('ai', 'Greetings, Commander. I am AATOS, your orbital intelligence core. Systems are fully responsive and under your direct command.');
             }
 
             appendMessage('user', text);
