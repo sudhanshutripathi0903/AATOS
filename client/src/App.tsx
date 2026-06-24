@@ -40,37 +40,20 @@ function App() {
   };
 
   return (
-    <div className="terminal-container">
-      {/* Header */}
-      <div className="terminal-header">
-        <span className="terminal-title">AATOS CORE TERMINAL v2.6</span>
-        <div className="status-dot"></div>
-      </div>
+  return (
+    <>
+      {/* ISRO Space Motion Graphics Layers */}
+      <div className="space-bg"></div>
+      <div className="nebula-glow"></div>
 
-      {/* Main Terminal Output Screens */}
-      <div className="terminal-output">
-        {history.map((item, index) => (
-          <div key={index} className={item.type === 'user' ? 'user-command' : 'ai-response'}>
-            {item.text}
-          </div>
-        ))}
-      </div>
-
-      {/* Bottom Input Area */}
-      <form onSubmit={handleSubmit} className="terminal-input-form">
-        <span style={{ color: '#00f2fe', marginRight: '10px', fontFamily: 'Fira Code, monospace' }}>&gt;</span>
-        <input 
-          type="text" 
-          className="terminal-input"
-          value={command}
-          onChange={(e) => setCommand(e.target.value)}
-          placeholder="Enter operational directive..."
-          autoFocus
-        />
-        <button type="submit" className="terminal-button">Execute</button>
-      </form>
-    </div>
-  );
-}
+      {/* Aapka Pehle Waala Terminal Container */}
+      <div className="terminal-container">
+        {/* Header */}
+        <div className="terminal-header">
+          <span className="terminal-title">AATOS CORE TERMINAL v2.6</span>
+          <div className="status-dot"></div>
+        </div>
+        
+        {/* ... baaki saara code bilkul same rahega ... */}
 
 export default App;
