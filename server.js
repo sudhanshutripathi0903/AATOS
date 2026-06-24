@@ -46,7 +46,7 @@ app.post('/api/execute', async (req, res) => {
 
   try {
     // 1. Auto-cleanup logs older than 7 days
-    await pool.query("DELETE FROM logs WHERE executed_at < NOW() - INTERVAL '7 days'");
+    await pool.query("DELETE FROM logs WHERE executed_at < NOW() - INTERVAL '3 days'");
 
     // 2. Chat Completion with Groq (Llama 3 model)
     const systemInstruction = `
