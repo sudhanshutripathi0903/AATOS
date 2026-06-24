@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import * as THREE from 'three'; // Iski zaroorat padegi agar config sahi hai, warna fallback setup chalega
 import './index.css';
 
 interface HistoryItem {
@@ -21,9 +20,7 @@ function App() {
   const [streams, setStreams] = useState<string[]>([]);
 
   const chatEndRef = useRef<HTMLDivElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  // 📡 Effect 1: Falling Data Streams (Hacker Matrix effect)
   useEffect(() => {
     const streamTexts = [
       '01001110 01000101 01011000 01010101',
@@ -37,77 +34,12 @@ function App() {
     const interval = setInterval(() => {
       setStreams(prev => {
         const next = [...prev, streamTexts[Math.floor(Math.random() * streamTexts.length)]];
-        if (next.length > 8) next.shift(); // Purane remove karo taaki lag na ho
+        if (next.length > 6) next.shift();
         return next;
       });
-    }, 2500);
+    }, 3000);
 
     return () => clearInterval(interval);
-  }, []);
-
-  // 🌌 Effect 2: THREE.JS Cosmic Motion Graphics Starfield
-  useEffect(() => {
-    if (!canvasRef.current) return;
-
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ canvas: canvasRef.current, alpha: true, antialias: true });
-    
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-    const starGeometry = new THREE.BufferGeometry();
-    const starCount = 2000;
-    const positions = new Float32Array(starCount * 3);
-
-    for (let i = 0; i < starCount * 3; i++) {
-      positions[i] = (Math.random() - 0.5) * 150;
-    }
-    starGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-
-    const starMaterial = new THREE.PointsMaterial({
-      size: 0.4,
-      color: 0x00f0ff,
-      transparent: true,
-      opacity: 0.6,
-      sizeAttenuation: true
-    });
-
-    const stars = new THREE.Points(starGeometry, starMaterial);
-    scene.add(stars);
-    camera.position.z = 5;
-
-    // Mouse track for dynamic movement
-    let mouseX = 0, mouseY = 0;
-    const handleMouseMove = (e: MouseEvent) => {
-      mouseX = (e.clientX / window.innerWidth - 0.5) * 1.5;
-      mouseY = (e.clientY / window.innerHeight - 0.5) * 1.5;
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-
-    const animate = () => {
-      requestAnimationFrame(animate);
-      stars.rotation.y += 0.0004;
-      stars.rotation.x += 0.0002;
-      camera.position.x += (mouseX - camera.position.x) * 0.05;
-      camera.position.y += (-mouseY - camera.position.y) * 0.05;
-      camera.lookAt(scene.position);
-      renderer.render(scene, camera);
-    };
-    animate();
-
-    const handleResize = () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    };
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('resize', handleResize);
-      renderer.dispose();
-    };
   }, []);
 
   useEffect(() => {
@@ -155,19 +87,18 @@ function App() {
   return (
     <div className="scanlines relative min-h-screen w-full bg-[#050508] text-gray-200 font-rajdhani overflow-hidden flex flex-col z-10">
       
-      {/* 🌌 LIVE 3D CANVAS BACKDROP */}
-      <canvas ref={canvasRef} id="three-canvas" className="fixed inset-0 pointer-events-none z-0"></canvas>
+      {/* 🌌 CSS DYNAMIC COSMIC BACKGROUND */}
+      <div className="space-bg-css fixed inset-0 pointer-events-none z-0"></div>
 
-      {/* 🛰️ FALLING TELEMETRY DATA STREAMS */}
-      <div className="fixed inset-0 pointer-events-none z-[1] overflow-hidden opacity-30">
+      {/* 🛰️ TELEMETRY STREAMS */}
+      <div className="fixed inset-0 pointer-events-none z-[1] overflow-hidden opacity-20">
         {streams.map((txt, i) => (
           <div 
             key={i} 
             className="absolute font-mono text-[10px] text-cyan-400 whitespace-nowrap"
             style={{ 
-              left: `${(i * 15) % 90 + 5}%`, 
-              top: `${(i * 20) % 70 + 10}%`,
-              animation: 'pulse 3s infinite alternate'
+              left: `${(i * 18) % 85 + 5}%`, 
+              top: `${(i * 25) % 65 + 15}%`,
             }}
           >
             {txt}
@@ -175,10 +106,10 @@ function App() {
         ))}
       </div>
       
-      {/* 🔐 SECURITY MASK */}
+      {/* 🔐 SECURITY PIN PANEL */}
       {!isUnlocked && (
         <div className={`fixed inset-0 z-[100] flex items-center justify-center bg-[#050508]/95 backdrop-blur-3xl transition-all duration-700 ease-in-out ${isSlidingOut ? 'translate-x-full opacity-0' : 'translate-x-0'}`}>
-          <div className="text-center p-8 rounded-2xl border border-cyan-500/20 bg-[#0a0a12] max-w-sm w-full mx-4 shadow-2xl shadow-cyan-500/10">
+          <div className="text-center p-8 rounded-2xl border border-cyan-500/20 bg-[#0a0a12] max-w-sm w-full mx-4 shadow-2xl">
             <h2 className="font-orbitron text-xl font-bold tracking-widest text-white mb-2">AATOS CORE LOCK</h2>
             <p className="text-xs font-mono text-cyan-400/60 uppercase tracking-widest mb-6">Enter Authorization Token</p>
             <form onSubmit={handlePinSubmit} className="flex items-center gap-2 border border-cyan-400/30 rounded-xl px-4 py-2 bg-black/40">
@@ -214,17 +145,17 @@ function App() {
           </div>
       </header>
 
-      {/* BACKDROP RINGS */}
+      {/* ORBIT RINGS */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden">
-          <div className="orbital-ring w-[300px] h-[300px]" style={{ animationDuration: '25s' }}></div>
-          <div className="orbital-ring w-[600px] h-[600px] border-purple-400/10" style={{ animationDuration: '40s', animationDirection: 'reverse' }}></div>
+          <div className="orbital-ring w-[280px] h-[280px]" style={{ animationDuration: '25s' }}></div>
+          <div className="orbital-ring w-[550px] h-[550px] border-purple-400/10" style={{ animationDuration: '40s', animationDirection: 'reverse' }}></div>
       </div>
 
-      {/* MAIN CONTAINER */}
+      {/* MAIN LAYOUT */}
       <main className="flex-1 flex flex-col justify-between max-w-4xl w-full mx-auto p-4 z-10 relative">
         {!isChatStarted && (
           <div className="text-center my-auto py-8">
-            <h1 className="font-orbitron text-4xl md:text-6xl font-black text-white mb-4 tracking-tight animate-pulse">
+            <h1 className="font-orbitron text-4xl md:text-6xl font-black text-white mb-4 tracking-tight">
               AATOS <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400">INTELLIGENCE</span>
             </h1>
             <p className="text-gray-400 text-sm max-w-md mx-auto font-rajdhani">
@@ -249,22 +180,21 @@ function App() {
                 </div>
               </div>
             )}
-            <div ref={chatEndRef} />
           </div>
         )}
 
-        {/* CONTROLS (Gemini Transition Layout) */}
+        {/* INPUT BOX CONTROL */}
         <div className={`w-full transition-all duration-500 ease-in-out ${!isChatStarted ? 'my-auto max-w-xl mx-auto' : 'mt-auto'}`}>
-          <div className="glass-panel border border-cyan-500/20 rounded-2xl p-3 shadow-2xl shadow-cyan-400/5">
+          <div className="glass-panel border border-cyan-500/20 rounded-2xl p-3 shadow-2xl">
             <form onSubmit={handleSubmit} className="flex items-center gap-3">
               <input 
                 type="text" 
                 value={command}
                 onChange={(e) => setCommand(e.target.value)}
                 placeholder="Ask anything about the cosmos, code, or operational vectors..." 
-                className="flex-1 bg-space-900/60 border border-cyan-500/10 rounded-xl px-4 py-2.5 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-cyan-400/40 transition-all outline-none"
+                className="flex-1 bg-[#050508]/60 border border-cyan-500/10 rounded-xl px-4 py-2.5 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-cyan-400/40 transition-all outline-none"
               />
-              <button type="submit" className="p-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 transition-all shadow-md">
+              <button type="submit" className="p-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 transition-all">
                 <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
               </button>
             </form>
