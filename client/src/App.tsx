@@ -22,13 +22,12 @@ function App() {
     setCommand('');
 
     try {
-      // ✅ Tumhara live backend link yahan perfectly config ho gaya hai:
       const response = await fetch('https://open-claw-backend.onrender.com/api/execute', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           command: currentCmd, 
-          token: "2005" // Tumhara secure PIN encryption key
+          token: "2005" 
         })
       });
       const data = await response.json();
@@ -39,21 +38,45 @@ function App() {
     }
   };
 
- 
-return (
+  return (
     <>
       {/* ISRO Space Motion Graphics Layers */}
       <div className="space-bg"></div>
       <div className="nebula-glow"></div>
 
-      {/* Aapka Pehle Waala Terminal Container */}
+      {/* Main Terminal Container */}
       <div className="terminal-container">
         {/* Header */}
         <div className="terminal-header">
           <span className="terminal-title">AATOS CORE TERMINAL v2.6</span>
           <div className="status-dot"></div>
         </div>
-        
-        {/* ... baaki saara code bilkul same rahega ... */}
+
+        {/* Main Terminal Output Screens */}
+        <div className="terminal-output">
+          {history.map((item, index) => (
+            <div key={index} className={item.type === 'user' ? 'user-command' : 'ai-response'}>
+              {item.text}
+            </div>
+          ))}
+        </div>
+
+        {/* Bottom Input Area */}
+        <form onSubmit={handleSubmit} className="terminal-input-form">
+          <span style={{ color: '#00f2fe', marginRight: '10px', fontFamily: 'Fira Code, monospace' }}>&gt;</span>
+          <input 
+            type="text" 
+            className="terminal-input"
+            value={command}
+            onChange={(e) => setCommand(e.target.value)}
+            placeholder="Enter operational directive..."
+            autoFocus
+          />
+          <button type="submit" className="terminal-button">Execute</button>
+        </form>
+      </div>
+    </>
+  );
+}
 
 export default App;
